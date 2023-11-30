@@ -1,71 +1,67 @@
-function formatPhoneNumber(value) {
-  if (!value) return;
+const mask = (selector) => {
+  const setCursorPosition = (position, element) => {
+    element.focus();
+    element.setSelectionRange(position, position);
+  };
 
-  const phoneNumber = value.replace(/[^\d]/g);
-  const phoneNumberLength = phoneNumber.length;
-
-  if (phoneNumberLength < 4) return phoneNumber;
-
-  return `+7 (${phoneNumber.slice(1, 4)}) ${phoneNumber.slice(
-    4,
-    7
-  )}-${phoneNumber.slice(7, 9)}-${phoneNumber.slice(9, 11)}`;
-}
-console.log(Number('str'));
-
-var input = document.getElementById('phone-mask'),
-  oldValue,
-  regex = new RegExp(/^\d{0,16}$/g),
-  mask = function (value) {
-    let output = ['+'];
-    console.log(output);
-    for (var i = 0; i < value.length; i++) {
-      console.log(value.length, i, value);
-
-      if (value.length === 1 && value !== '7' && value !== '8') {
-        output.push('7');
-        console.log(value, 'is value');
-      } else if (value === '7') {
-        console.log('неверное начало', 'but value is', value);
-      } else if (value === '8') {
-        console.log('неверное начало', 'but value is', value);
-        output.pop();
-        output.pop();
-        output.push('7');
-        value = 0;
-      } else if (value.length === 1) {
-        console.log('value.length');
-      } else if (i === 1) {
-        output.push(' (');
-      } else if (i === 3) {
-      } else if (i === 4) {
-        output.push(') ');
-      } else if (i === 7 || i === 9) {
-        output.push('-');
-      }
-      output.push(value[i]);
+  const createMask = (event) => {
+    if (event.target.value.length === 11 && event.target.value[0] === '8') {
+      event.target.value = event.target.value.replace('8', '');
     }
-    return output.join('');
-  },
-  unmask = function (value) {
-    /^\d{0,16}$/g;
-    var output = value.replace(new RegExp(/[^\d]/, 'g'), ''); // Remove every non-digit character
-    return output;
-  },
-  keydownHandler = function (e) {
-    oldValue = e.target.value;
-  },
-  inputHandler = function (e) {
-    var el = e.target,
-      newValue = el.value;
-    newValue = unmask(newValue);
 
-    if (newValue.match(regex)) {
-      newValue = mask(newValue);
-      el.value = newValue;
-    } else {
-      el.value = oldValue;
+    if (event.target.value.length === 11 && event.target.value[0] === '7') {
+      event.target.value = event.target.value.replace('7', '');
+    }
+
+    if (event.target.value.length >= 13 && event.target.value[0] === '+') {
+      event.target.value = event.target.value.replace('+7', '');
+    }
+
+    const matrix = '(___) ___-__-__';
+    const def = matrix.replace(/\D/g, '');
+    let i = 0;
+    let = value = event.target.value.replace(/\D/g, '');
+
+    if (def.length >= value.length) {
+      value = def;
+    }
+
+    event.target.value = matrix.replace(/./g, (a) => {
+      return /[_\d]/.test(a) && i < value.length
+        ? value.charAt(i++)
+        : i >= value.length
+        ? ''
+        : a;
+    });
+
+    if (event.type !== 'blur') {
+      setCursorPosition(event.target.value.length, event.target);
+    }
+
+    if (
+      event.target.value.length < 15 &&
+      event.type === 'blur' &&
+      event.target.value.length > 0
+    ) {
+      document.getElementById('phone').classList.add('error');
+    }
+
+    if (
+      event.target.value.length > 14 ||
+      event.target.value === '' ||
+      event.type === 'focus'
+    ) {
+      document.getElementById('phone').classList.remove('error');
     }
   };
-input.addEventListener('keydown', keydownHandler);
-input.addEventListener('input', inputHandler);
+
+  const input = document.querySelector(selector);
+
+  input.addEventListener('input', createMask);
+  input.addEventListener('focus', createMask);
+  input.addEventListener('blur', createMask);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  mask('.form__phone');
+});

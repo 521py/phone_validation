@@ -1,7 +1,36 @@
-.error {
-  color: red;
-  size: 80%;
+body,
+input {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
 }
-.hidden {
-  display: none;
+
+.form {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form__phone {
+  width: 100%;
+  padding-left: 30px;
+  border: none;
+}
+
+.form__phone-wrapper {
+  position: relative;
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form__phone-code {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.error {
+  background-color: rgba(255, 0, 0, 0.2);
 }
