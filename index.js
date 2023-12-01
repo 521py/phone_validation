@@ -1,4 +1,6 @@
 const mask = (selector) => {
+  const input = document.querySelector(selector);
+
   const setCursorPosition = (position, element) => {
     element.focus();
     element.setSelectionRange(position, position);
@@ -39,23 +41,21 @@ const mask = (selector) => {
     }
 
     if (
-      event.target.value.length < 15 &&
-      event.type === 'blur' &&
-      event.target.value.length > 0
+      event.target.value.length &&
+      event.target.value.length < matrix.length &&
+      event.type === 'blur'
     ) {
-      document.getElementById('phone').classList.add('error');
+      input.classList.add('form__phone-error');
     }
 
     if (
+      !event.target.value ||
       event.target.value.length > 14 ||
-      event.target.value === '' ||
       event.type === 'focus'
     ) {
-      document.getElementById('phone').classList.remove('error');
+      input.classList.remove('form__phone-error');
     }
   };
-
-  const input = document.querySelector(selector);
 
   input.addEventListener('input', createMask);
   input.addEventListener('focus', createMask);
